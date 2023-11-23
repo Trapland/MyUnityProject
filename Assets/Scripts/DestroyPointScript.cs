@@ -7,11 +7,20 @@ public class DestroyPointScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         //Debug.Log(other.name);
-        GameObject.Destroy( // знищення об'єкту - повне, не лише деактивація
-            other           // колайдер (компонент об'єкту)
+        Transform? parent =
+             other           // колайдер (компонент об'єкту)
             .gameObject     // об'єкт цього колайдеру
-            .transform      // батьківський transform
-            .parent         // об'єкт цього transform - батьківський об'єкт
-            .gameObject);   // 
+            .transform      // його компонент transform
+            .parent;        // батьківський transform
+          //.gameObject;   // об'єкт цього transform - батьківський об'єкт
+
+        if (parent != null && parent.CompareTag("Pipe"))
+        {
+            GameObject.Destroy (parent.gameObject);
+        }
+        else
+        {
+            GameObject.Destroy(other.gameObject);
+        }
     }
 }
