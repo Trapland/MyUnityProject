@@ -14,14 +14,25 @@ public class MenuScript : MonoBehaviour
     private Slider pipePeriodSlider;
     [SerializeField]
     private Slider vitality;
+    private const string configFilename = "Assets/Files/config.json";
     private bool isShown;
     // Start is called before the first frame update
     void Start()
     {
         isShown = content.activeInHierarchy;
         ToggleMenu(isShown);
-        GameState.isWkeyEnabled = controlWToggle.isOn;
-        SetPipePeriod(pipePeriodSlider.value);
+        if(LoadSettings())
+        {
+            controlWToggle.isOn = GameState.isWkeyEnabled;
+            pipePeriodSlider.value = (6f - GameState.pipePeriod) / (6f - 2f);
+            vitality.value = (2f - GameState.DPS) / (2f);
+        }
+        else
+        {
+            GameState.isWkeyEnabled = controlWToggle.isOn;
+            SetPipePeriod(pipePeriodSlider.value);
+            SetDPS(vitality.value);
+        }
     }
 
     // Update is called once per frame
@@ -32,6 +43,22 @@ public class MenuScript : MonoBehaviour
             ToggleMenu(!isShown);
         }
     }
+    private void SaveSettings()
+    {
+        System.IO.File.WriteAllText(configFilename, GameState.toJson());
+    }
+
+    private bool LoadSettings()
+    {
+        if(System.IO.File.Exists(configFilename))
+        {
+            GameState.fromJson(
+            System.IO.File.ReadAllText(configFilename));
+            return true;
+        }
+        return false;
+    }
+
     private void ToggleMenu(bool isDisplayed)
     {
         if (isDisplayed)
@@ -55,6 +82,7 @@ public class MenuScript : MonoBehaviour
     public void ControlToggleWChanged(Boolean value)
     {
         GameState.isWkeyEnabled = value;
+        SaveSettings();
     }
     public void PipePeriodSliderChanged(Single value)
     {
@@ -63,6 +91,21 @@ public class MenuScript : MonoBehaviour
     }
     private void SetPipePeriod(Single sliderValue)
     {
-        GameState.pipePeriod = 6f - (6f - 2f) * sliderValue; 
+        GameState.pipePeriod = 6f - (6f - 2f) * sliderValue;
+        SaveSettings();
+
+    }
+
+    public void VitalitySliderChanged(Single value)
+    {
+        //Debug.Log("PipePeriodSliderChanged:");
+        SetDPS(value);
+    }
+
+    private void SetDPS(Single sliderValue)
+    {
+        GameState.DPS = 2f - (2f) * sliderValue;
+        SaveSettings();
+
     }
 }

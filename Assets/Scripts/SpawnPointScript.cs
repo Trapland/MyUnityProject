@@ -6,6 +6,8 @@ public class SpawnPointScript : MonoBehaviour
 {
     [SerializeField]
     private GameObject pipePrefab;
+    [SerializeField] 
+    private GameObject myPipePrefab;
     [SerializeField]
     private GameObject applePrefab;
     //private float pipeSpawnPeriod = 4f;     // час у секундах між появою труб
@@ -46,7 +48,7 @@ public class SpawnPointScript : MonoBehaviour
 
     private void SpawnFood()
     {
-        if(Random.value < 0.3f)
+        if(Random.value < GameState.DPS / 2 + 0.2)
         {
             var apple = GameObject.Instantiate(applePrefab); // ~ new PipePrefab
             apple.transform.position = this.transform.position + Vector3.up * Random.Range(-4f, 4f);
@@ -56,7 +58,16 @@ public class SpawnPointScript : MonoBehaviour
 
     private void SpawnPipe()
     {
-        var pipe = GameObject.Instantiate( pipePrefab ); // ~ new PipePrefab
-        pipe.transform.position = this.transform.position + Vector3.up * Random.Range(-1.4f, 1.4f);
+        if (Random.value < 0.5f)
+        {
+            var pipe = GameObject.Instantiate( pipePrefab ); // ~ new PipePrefab
+            pipe.transform.position = this.transform.position + Vector3.up * Random.Range(-1.4f, 1.4f);
+        }
+        else
+        {
+            var pipe = GameObject.Instantiate(myPipePrefab); // ~ new my PipePrefab
+            pipe.transform.position = this.transform.position + Vector3.up * Random.Range(-1.4f, 1.4f);
+        }
+        
     }
 }

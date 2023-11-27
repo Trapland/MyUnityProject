@@ -24,7 +24,7 @@ public class PipeScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Trigger detected: " + collision.gameObject.name);
+        //Debug.Log("Trigger detected: " + collision.gameObject.name);
     }
     /*
      * З точки зору взаємодії  між собою колайдери поділяються на фізичні та тригери
